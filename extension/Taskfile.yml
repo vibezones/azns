@@ -1,0 +1,26 @@
+version: '3'
+
+tasks:
+  build:
+    desc: Build/package the Chrome extension into a zip
+    cmds:
+      - mkdir -p ../dist
+      - zip -r ../dist/alt-dns.zip manifest.json background.js icons/ 2>/dev/null || true
+      - echo "Extension packaged at ../dist/alt-dns.zip"
+
+  deploy:
+    desc: Deploy to vibezones/extension on vibe branch
+    cmds:
+      - |
+        EXT_DIR=$(pwd)
+        TMPDIR=$(mktemp -d)
+        gh repo clone vibezones/extension $TMPDIR 2>/dev/null || gh repo clone vibezones/extension $TMPDIR
+        cd $TMPDIR
+        git fetch origin vibe:vibe 2>/dev/null || true
+        git checkout vibe 2>/dev/null || git checkout -b vibe
+        cp $EXT_DIR/manifest.json $EXT_DIR/background.js .
+        rm -rf icons && cp -r $EXT_DIR/icons .
+        git add -A
+        git commit -m "deploy" || true
+        git push origin vibe
+        rm -rf $TMPDIR

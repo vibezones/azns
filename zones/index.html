@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Alt DNS</title></head>
+<body>
+<pre id="out">resolving...</pre>
+<script>
+// MUST match domainToInt in build.js and extension/background.js
+function domainToInt(domain) {
+  let h = 0;
+  for (const ch of domain) {
+    h = (h * 31 + ch.codePointAt(0)) >>> 0;
+  }
+  return h;
+}
+
+async function resolve(domain) {
+  const meta = await fetch("dist/count.json").then(r => r.json());
+  const bucket = domainToInt(domain) % meta.shards;
+  const res = await fetch(`dist/zones/${bucket}.json`);
+  if (!res.ok) return null;
+  const shard = await res.json();
+  return shard[domain] || null;
+}
+
+const domain = new URLSearchParams(location.search).get("domain");
+if (domain) {
+  resolve(domain).then(r => {
+    document.getElementById("out").textContent = r || "not found";
+  });
+} else {
+  document.getElementById("out").textContent = "usage: ?domain=name";
+}
+</script>
+</body>
+</html>

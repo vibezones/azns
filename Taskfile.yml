@@ -1,0 +1,12 @@
+version: '3'
+
+includes:
+  server:
+    taskfile: server/Taskfile.yml
+    dir: server
+  extension:
+    taskfile: extension/Taskfile.yml
+    dir: extension
+  zones:
+    taskfile: zones/Taskfile.yml
+    dir: zones

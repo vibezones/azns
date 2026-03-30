@@ -1,0 +1,8 @@
+version: '3'
+
+tasks:
+  start:
+    desc: Start the Alt DNS Express server
+    cmds:
+      - pnpm install
+      - node --watch server.js

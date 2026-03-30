@@ -1,0 +1,25 @@
+version: '3'
+
+tasks:
+  build:
+    desc: Build sharded static DNS data from dns-config.json
+    cmds:
+      - node build.js
+
+  deploy:
+    desc: Deploy to vibezones/zones on vibe branch
+    deps: [build]
+    cmds:
+      - |
+        ZONES_DIR=$(pwd)
+        TMPDIR=$(mktemp -d)
+        gh repo clone vibezones/zones $TMPDIR 2>/dev/null || gh repo clone vibezones/zones $TMPDIR
+        cd $TMPDIR
+        git fetch origin vibe:vibe 2>/dev/null || true
+        git checkout vibe 2>/dev/null || git checkout -b vibe
+        cp $ZONES_DIR/index.html $ZONES_DIR/index.json .
+        rm -rf dist && cp -r $ZONES_DIR/dist .
+        git add -A
+        git commit -m "deploy" || true
+        git push origin vibe
+        rm -rf $TMPDIR
