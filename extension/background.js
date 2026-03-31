@@ -15,6 +15,13 @@ function domainToInt(domain) {
 
 async function getBaseUrl() {
   if (baseUrl) return baseUrl;
+
+  const { customServer } = await chrome.storage.local.get("customServer");
+  if (customServer) {
+    baseUrl = `${customServer}/dist`;
+    return baseUrl;
+  }
+
   try {
     const res = await fetch(ZONES_REGISTRY_URL);
     const { servers } = await res.json();
@@ -90,5 +97,34 @@ chrome.omnibox.onInputEntered.addListener(async (text, disposition) => {
     chrome.tabs.update(tab.id, { url: targetUrl });
   } else {
     chrome.tabs.create({ url: targetUrl });
+  }
+});
+
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (message.action === "getStatus") {
+    (async () => {
+      const { customServer } = await chrome.storage.local.get("customServer");
+      const activeServer = await getBaseUrl();
+      sendResponse({ activeServer, customServer: customServer || null });
+    })();
+    return true;
+  }
+  if (message.action === "setCustomServer") {
+    (async () => {
+      await chrome.storage.local.set({ customServer: message.url });
+      baseUrl = null;
+      meta = null;
+      sendResponse({ ok: true });
+    })();
+    return true;
+  }
+  if (message.action === "clearCustomServer") {
+    (async () => {
+      await chrome.storage.local.remove("customServer");
+      baseUrl = null;
+      meta = null;
+      sendResponse({ ok: true });
+    })();
+    return true;
   }
 });

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 350px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 13px;
+      color: #1a1a1a;
+      padding: 16px;
+      background: #fafafa;
+    }
+    h1 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .section {
+      margin-bottom: 16px;
+    }
+    .label {
+      font-size: 11px;
+      font-weight: 500;
+      color: #666;
+      margin-bottom: 6px;
+      display: block;
+    }
+    #activeServer {
+      font-size: 12px;
+      padding: 8px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      word-break: break-all;
+      font-family: monospace;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: monospace;
+    }
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+    }
+    .buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    button {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      color: #666;
+      transition: all 0.2s;
+    }
+    button:hover {
+      background: #f5f5f5;
+      border-color: #999;
+    }
+    button.primary {
+      background: #2563eb;
+      color: #fff;
+      border-color: #2563eb;
+    }
+    button.primary:hover {
+      background: #1d4ed8;
+    }
+    button.danger {
+      background: #ef4444;
+      color: #fff;
+      border-color: #ef4444;
+    }
+    button.danger:hover {
+      background: #dc2626;
+    }
+    #clearBtn {
+      display: none;
+    }
+    #clearBtn.show {
+      display: block;
+    }
+    .hint {
+      font-size: 11px;
+      color: #888;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <h1>Alt DNS</h1>
+
+  <div class="section">
+    <label class="label">Active Server</label>
+    <div id="activeServer">Loading...</div>
+  </div>
+
+  <div class="section">
+    <label class="label">Custom Server (optional)</label>
+    <input type="text" id="customServerInput" placeholder="https://custom-server.example.com">
+    <div class="buttons">
+      <button id="saveBtn" class="primary">Save</button>
+      <button id="clearBtn" class="danger">Clear Override</button>
+    </div>
+  </div>
+
+  <div class="hint">
+    Type <code>alt <domain></code> in the address bar to resolve.
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
